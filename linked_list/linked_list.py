@@ -61,7 +61,9 @@ class LinkedList:
         self.size -= 1
 
         if index == 0:
-            return self.remove_head()
+            head = self.head
+            self.head = self.head.next if self.head else None
+            return head
             
         for i, node in enumerate(self):
             if i == index - 1:
@@ -70,12 +72,16 @@ class LinkedList:
                 return node_to_remove
 
     def pop(self):
-        return self.remove(self.size - 1)
+        try:
+            return self.remove(self.size - 1)
+        except IndexError:
+            raise Exception("Não há elementos na lista.")
 
     def remove_head(self):
-        head = self.head
-        self.head = self.head.next if self.head else None
-        return head
+        try:
+            return self.remove(0)
+        except IndexError:
+            raise Exception("Não há elementos na lista.")
        
     def is_empty(self):
         return len(self) == 0
@@ -114,7 +120,8 @@ class LinkedList:
 
         self.check_index(begin)
         self.check_index(end)
-        self.check_index(step)
+        if step <= 0:
+            raise IndexError("Step não pode ser menor que 0.")
 
         for i, node in enumerate(self):
             if store and count is not None:
@@ -134,4 +141,4 @@ class LinkedList:
             string += str(node)
             if i < self.size - 1:
                 string += "->"
-        return string  
+        return string 
