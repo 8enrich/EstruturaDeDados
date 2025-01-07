@@ -52,19 +52,33 @@ class BinTree:
         next = self.next(value)
         if next:
             before = self.before(next.data)
-            self.remove_next(before, next)
-            node.data = next.data
+            data = next.data
+            self.remove(next.data)
+            node.data = data
             return
         before = self.before(node.data)
         self.remove_next(before, node)
 
     def remove_next(self, node, next):
-        if node is None:
+        if not node:
+            self.__remove_root(next)
             return
-        if node.right:
-            node.right = next.right if node.right.data == next.data else node.right
+        if node.data < next.data:
+            if next.right:
+                node.right = next.right
+                return
+            node.right = next.left
             return
-        node.left = next.left if node.left.data == next.data else node.left
+        if next.right:
+            node.left = next.right
+            return
+        node.left = next.left
+        
+    def __remove_root(self, next):
+        if next.right:
+            self.root = next.right
+            return
+        self.root = next.left
 
     def __before(self, node, value):
         if node is None:
