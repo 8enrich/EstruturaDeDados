@@ -4,7 +4,6 @@ class BinTree:
 
     def __init__(self, root=None):
         self.root = root
-        self.size = 1 if root else 0
 
     def __search(self, node, value):
         if node is None or node.data == value:
@@ -22,11 +21,13 @@ class BinTree:
         if node.data > value:
             if node.left is None:
                 node.left = Node(value)
+                node.left.father = node
                 return
             self.__insert(node.left, value)
         if node.data < value:
             if node.right is None:
                 node.right = Node(value)
+                node.right.father = node
                 return
             self.__insert(node.right, value)
 
@@ -51,12 +52,12 @@ class BinTree:
             return
         next = self.next(value)
         if next:
-            before = self.before(next.data)
+            before = next.father 
             data = next.data
             self.remove(next.data)
             node.data = data
             return
-        before = self.before(node.data)
+        before = node.father 
         self.remove_next(before, node)
 
     def remove_next(self, node, next):
@@ -80,22 +81,13 @@ class BinTree:
             return
         self.root = next.left
 
-    def __before(self, node, value):
-        if node is None:
-            return 
-        if node.right:
-            if node.right.data == value:
-                return node
-            if node.data < value:
-                return self.__before(node.right, value)
-        if node.left:
-            if node.left.data == value:
-                return node
-            if node.data > value:
-                return self.__before(node.left, value)
+    def __get_height(self, node):
+        if not node:
+            return 0
+        return node.get_height()
 
-    def before(self, value):
-        return self.__before(self.root, value)
+    def get_height(self):
+        return self.__get_height(self.root)
 
     def __repr(self, node, level):
         string = ""
