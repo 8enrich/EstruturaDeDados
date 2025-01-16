@@ -17,25 +17,15 @@ class BinTree:
 
     def __insert(self, node, value):
         if node is None:
-            return
+            return Node(value)
         if node.data > value:
-            if node.left is None:
-                node.left = Node(value)
-                node.left.father = node
-                return
-            self.__insert(node.left, value)
+            node.left = self.__insert(node.left, value)
         if node.data < value:
-            if node.right is None:
-                node.right = Node(value)
-                node.right.father = node
-                return
-            self.__insert(node.right, value)
+            node.right = self.__insert(node.right, value)
+        return node
 
     def insert(self, value):
-        if self.root is None:
-            self.root = Node(value)
-            return
-        self.__insert(self.root, value)
+        self.root = self.__insert(self.root, value)
 
     def __next(self, node):
         if node is None or node.left is None:
@@ -46,45 +36,27 @@ class BinTree:
         node = self.search(value)
         return None if not node else self.__next(node.right)
 
-    def remove(self, value): 
-        node = self.search(value)
-        if not node:
-            return
-        next = self.next(value)
-        if next:
-            before = next.father 
-            data = next.data
-            self.remove(next.data)
-            node.data = data
-            return
-        before = node.father 
-        self.remove_next(before, node)
+    def __remove(self, node, value):
+        if node is None:
+            return None 
+        if node.data > value:
+            node.left = self.__remove(node.left, value)
+        if node.data < value:
+            node.right = self.__remove(node.right, value)
+        if node.data == value:
+            if not node.left or not node.right:
+                return node.left if node.left else node.right
+            next = self.__next(node.right)
+            self.__remove(node, next.data)
+            next.left, next.right = node.left, node.right
+            return next
+        return node
 
-    def remove_next(self, node, next):
-        if not node:
-            self.__remove_root(next)
-            return
-        if node.data < next.data:
-            if next.right:
-                node.right = next.right
-                return
-            node.right = next.left
-            return
-        if next.right:
-            node.left = next.right
-            return
-        node.left = next.left
-        
-    def __remove_root(self, next):
-        if next.right:
-            self.root = next.right
-            return
-        self.root = next.left
+    def remove(self, value): 
+        self.root = self.__remove(self.root, value)
 
     def __get_height(self, node):
-        if not node:
-            return 0
-        return node.get_height()
+        return 0 if not node else node.get_height()
 
     def get_height(self):
         return self.__get_height(self.root)
