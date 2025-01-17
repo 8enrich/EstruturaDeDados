@@ -61,15 +61,19 @@ class BinTree:
     def get_height(self):
         return self.__get_height(self.root)
 
-    def __repr(self, node, level):
-        string = ""
-        if node:
-            string += str(node)
-            string += "\n" + "|  " * level + "|- " + self.__repr(node.left, level + 1)
-            if node.right:
-                string += "\n" + "|  " * level + "|"
-            string += "\n" + "|  " * level + "|- " +self.__repr(node.right, level + 1)
+    def __repr(self, node):
+        if not node:
+            return ""
+        string = str(node.data)
+        left = self.__repr(node.left)
+        string += "\n├── "
+        for i in left.splitlines():
+            string += i + "\n│   "
+        right = self.__repr(node.right)
+        string += "\n└── "
+        for i in right.splitlines():
+            string += i + "\n    "
         return string 
 
     def __repr__(self):
-        return self.__repr(self.root, 0)
+        return self.__repr(self.root)
