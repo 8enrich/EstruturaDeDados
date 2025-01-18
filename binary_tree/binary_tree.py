@@ -66,14 +66,14 @@ class BinTree:
             return ""
         string = str(node.data)
         left = self.__repr(node.left)
-        string += "\n├── "
-        for i in left.splitlines():
-            string += i + "\n│   "
         right = self.__repr(node.right)
-        string += "\n└── "
+        string += "\n├── "
         for i in right.splitlines():
+            string += i + "\n│   "
+        string += "\n└── "
+        for i in left.splitlines():
             string += i + "\n    "
         return string 
 
     def __repr__(self):
-        return self.__repr(self.root)
+        return self.__repr(self.root).strip()
