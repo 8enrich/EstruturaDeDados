@@ -53,15 +53,17 @@ class RedBlack(BinTree):
         self.__insert_case_4(node)
 
     def __insert_case_4(self, node):
+        self.__rotate(node)
+        return self.__insert_case_2(node)
+
+    def __rotate(self, node):
         g = node.get_grandfather()
         f = node.father
         if((g.left == f and f.left == node) or (g.right == f and f.right == node)):
             self.__simple_rotation(node, f, g)
-            self.__change_colors(f, g)
-            return self.__insert_case_2(node)
+            return self.__change_colors(f, g)
         self.__double_rotation(node, f, g)
         self.__change_colors(g, node)
-        return self.__insert_case_2(node)
 
     def __simple_rotation(self, x, y, z):
         if z.left == y:
@@ -114,17 +116,13 @@ class RedBlack(BinTree):
 
     def __change_grandgrandfather(self, gg, y):
         if not gg:
-            self.root = y
-            y.father = None
+            self.root, y.father = y, None
             return
         self.__insert_new_node(gg, y)
         
     def __change_colors(self, *args):
         for node in args:
-            self.__change_color(node)
-
-    def __change_color(self, node):
-        node.color = 1 - node.color
+            node.color = 1 - node.color
 
     def __repr(self, node):
         if not node:
