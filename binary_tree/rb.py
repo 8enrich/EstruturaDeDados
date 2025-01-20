@@ -54,7 +54,7 @@ class RedBlack(BinTree):
 
     def __insert_case_4(self, node):
         self.__rotate(node)
-        return self.__insert_case_2(node)
+        return self.__insert_case_1(node)
 
     def __rotate(self, node):
         g = node.get_grandfather()
