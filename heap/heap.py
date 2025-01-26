@@ -33,6 +33,16 @@ class Heap:
     def height(self):
         return self._height(0)
 
+    def __getitem__(self, index):
+        if index > len(self):
+            raise IndexError
+        return self._list[index]
+
+    def __setitem__(self, index, value):
+        if index > len(self):
+            raise IndexError
+        self._list[index] = value
+
     def __repr(self, index):
         if index is None:
             return ""

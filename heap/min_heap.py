@@ -6,17 +6,15 @@ class MinHeap(Heap):
         super(MinHeap, self).__init__()
 
     def __change_nodes(self, index1, index2):
-        value = self._list[index1]
-        self._list[index2], self._list[index1] = value, self._list[index2]
-        return self._list.index(value)
+        self[index2], self[index1] = self[index1], self[index2]
 
     def __heapfy(self, index):
         father = self.father(index)
         if father is None:
             return
-        if self._list[father] > self._list[index]:
-            new_index = self.__change_nodes(index, father)
-            self.__heapfy(new_index)
+        if self[father] > self[index]:
+            self.__change_nodes(index, father)
+            self.__heapfy(father)
 
     def add(self, value):
         super().add(value)
@@ -31,22 +29,22 @@ class MinHeap(Heap):
             return index
         return self.rightest_node(self.right(index))
 
-    def __heapify_down(self, index):
+    def __heapfy_down(self, index):
         left_index = self.left(index)
-        if left_index and self._list[left_index] < self._list[index]:
-            new_index = self.__change_nodes(index, left_index)
-            self.__heapify_down(new_index)
+        if left_index and self[left_index] < self[index]:
+            self.__change_nodes(index, left_index)
+            self.__heapfy_down(left_index)
         right_index = self.right(index)
-        if right_index and self._list[right_index] < self._list[index]:
-            new_index = self.__change_nodes(index, right_index)
-            self.__heapify_down(new_index)
+        if right_index and self[right_index] < self[index]:
+            self.__change_nodes(index, right_index)
+            self.__heapfy_down(right_index)
 
     def remove(self):
         index = self.rightest_node(0)
-        value = self._list[index]
-        root = self._list[0]
-        del self._list[index]
+        value = self[index]
+        root = self[0]
+        self._list.pop(index)
         if len(self) > 0:
-            self._list[0] = value
-            self.__heapify_down(0)
+            self[0] = value
+            self.__heapfy_down(0)
         return root
