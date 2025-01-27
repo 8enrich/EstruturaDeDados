@@ -4,6 +4,18 @@ class Heap:
     def __init__(self):
         self._list = []
 
+    def __change_nodes(self, index1, index2):
+        self[index2], self[index1] = self[index1], self[index2]
+
+    def rightest_node(self, index):
+        height_left = self._height(self.left(index))
+        height_right = self._height(self.right(index))
+        if height_left > height_right:
+            return self.rightest_node(self.left(index))
+        if height_right == 0:
+            return index
+        return self.rightest_node(self.right(index))
+
     def left(self, index):
         left = 2 * index + 1
         return left if left < len(self) else None
